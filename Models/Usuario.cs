@@ -58,7 +58,7 @@ public class Usuario
         return true;
     }
 
-    public static async Task<Usuario> CadastrarUsuario(string nome, string cpf, string email, string senha, string? telefone = null, string? endereco = null)
+    public static async Task<bool> CadastrarUsuario(string nome, string cpf, string email, string senha, string? telefone = null, string? endereco = null)
     {
         await using (var db = new AppDbContext())
         {
@@ -82,8 +82,81 @@ public class Usuario
             };
             db.Usuarios.Add(usuario);
             await db.SaveChangesAsync();
+
+            return true;
+        }
+    }
+    public static async Task<bool> AtualizarUsuario(int id, string? nome = null, string? cpf = null, string? email = null, string? senha = null, string? telefone = null, string? endereco = null)
+    {
+        await using (var db = new AppDbContext())
+        {
+            var usuario = await db.Usuarios.FindAsync(id);
+            if (usuario == null)
+            {
+                throw new InvalidOperationException("Usuário não encontrado.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(nome))
+            {
+                usuario.Nome = nome;
+            }
+            else
+            {
+                throw new ArgumentException("O nome não pode ser nulo ou vazio.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(cpf))
+            {
+                if (!CpfValido(cpf))
+                {
+                    throw new ArgumentException("CPF inválido.");
+                }
+                usuario.Cpf = cpf;
+            }
+            else
+            {
+                throw new ArgumentException("O CPF não pode ser nulo ou vazio.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(email))
+            {
+                usuario.Email = email;
+            }
+            else
+            {
+                throw new ArgumentException("O e-mail não pode ser nulo ou vazio.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(senha))
+            {
+                usuario.Senha = senha;
+            }
+            else
+            {
+                throw new ArgumentException("A senha não pode ser nula ou vazia.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(telefone))
+            {
+                usuario.Telefone = telefone;
+            }
+            else
+            {
+                throw new ArgumentException("O telefone não pode ser nulo ou vazio.");
+            }
             
-            return usuario;
+            if (!string.IsNullOrWhiteSpace(endereco))
+            {
+                usuario.Endereco = endereco;
+            }
+            else
+            {
+                throw new ArgumentException("O endereço não pode ser nulo ou vazio.");
+            }
+            
+            await db.SaveChangesAsync();
+            
+            return true;
         }
     }
     public static async Task<Usuario?> AutenticarUsuario(string email, string senha)
@@ -91,10 +164,10 @@ public class Usuario
         await using (var db = new AppDbContext())
         {
             var usuario = await db.Usuarios.FirstOrDefaultAsync(u => u.Email == email && u.Senha == senha);
-            return usuario;
+            return usuario.Id != 0 ? usuario : null;
         }
     }
-    public static async Task<Usuario?> DeletarUsuario(int id)
+    public static async Task<bool> DeletarUsuario(int id)
     {
         await using (var db = new AppDbContext())
         {
@@ -104,7 +177,7 @@ public class Usuario
                 db.Usuarios.Remove(usuario);
                 await db.SaveChangesAsync();
             }
-            return usuario;
+            return true;
         }
     }
 }

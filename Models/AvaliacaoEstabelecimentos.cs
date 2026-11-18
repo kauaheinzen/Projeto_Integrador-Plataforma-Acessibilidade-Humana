@@ -11,7 +11,7 @@ public class AvaliacaoEstabelecimentos
 
     public double Nota { get; set; }
 
-    public static async Task AdicionarAvaliacao(int estabelecimentoId, double nota)
+    public static async Task<bool> AdicionarAvaliacao(int estabelecimentoId, double nota)
     {
         await using (var db = new AppDbContext())
         {
@@ -38,6 +38,8 @@ public class AvaliacaoEstabelecimentos
 
             
             await db.SaveChangesAsync();
+
+            return true;
         }
     }
     public static async Task<List<AvaliacaoEstabelecimentos>> ListarAvaliacoes(int estabelecimentoId)

@@ -74,7 +74,7 @@ public class Estabelecimento
         return true;
     }
 
-    public static async Task<Estabelecimento> CadastrarEstabelecimento(string nome, string cnpj, double latitude, double longitude,  string? telefone = null)
+    public static async Task<bool> CadastrarEstabelecimento(string nome, string cnpj, double latitude, double longitude,  string? telefone = null)
     {
         await using (var db = new AppDbContext())
         {
@@ -115,7 +115,7 @@ public class Estabelecimento
             db.Set<Estabelecimento>().Add(estabelecimento);
             await db.SaveChangesAsync();
 
-            return estabelecimento;
+            return true;
         }
     }
     public static async Task<double> CalcularMedia(int estabelecimentoId)
@@ -158,7 +158,82 @@ public class Estabelecimento
             }
         }
     }
-    public static async Task<Estabelecimento?> DeletarEstabelecimento(int id)
+    public static async Task<bool> AtualizarEstabelecimento(int id, string? nome = null, string? cnpj = null, double? latitude = null, double? longitude = null, string? telefone = null)
+    {
+        await using (var db = new AppDbContext())
+        {
+            var estabelecimento = await db.Set<Estabelecimento>().FindAsync(id);
+            if (estabelecimento == null)
+            {
+                throw new Exception("Estabelecimento não encontrado.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(nome))
+            {
+                estabelecimento.Nome = nome;
+            }
+            else
+            {
+                throw new ArgumentException("O nome do estabelecimento não pode ser nulo ou vazio.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(cnpj))
+            {
+                if (await db.Set<Estabelecimento>().AnyAsync(e => e.Cnpj == cnpj && e.Id != id))
+                {
+                    throw new ArgumentException("CNPJ já cadastrado.");
+                }
+                if (ValidarCnpj(cnpj) == false)
+                {
+                    throw new ArgumentException("CNPJ inválido.");
+                }
+                estabelecimento.Cnpj = cnpj;
+            }
+            else
+            {
+                throw new ArgumentException("O CNPJ não pode ser nulo ou vazio.");
+            }
+
+            if (latitude.HasValue)
+            {
+                if (latitude < -90 || latitude > 90)
+                {
+                    throw new ArgumentException("A latitude deve estar entre -90 e 90.");
+                }
+                estabelecimento.Latitude = Math.Round(latitude.Value, 4);
+            }
+            else
+            {
+                throw new ArgumentException("A latitude não pode ser nula.");
+            }
+
+            if (longitude.HasValue)
+            {
+                if (longitude < -180 || longitude > 180)
+                {
+                    throw new ArgumentException("A longitude deve estar entre -180 e 180.");
+                }
+                estabelecimento.Longitude = Math.Round(longitude.Value, 4);
+            }
+            else
+            {
+                throw new ArgumentException("A longitude não pode ser nula.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(telefone))
+            {
+                estabelecimento.Telefone = telefone;
+            }
+            else
+            {
+                throw new ArgumentException("O telefone não pode ser nulo ou vazio.");
+            }
+
+            await db.SaveChangesAsync();
+            return true;
+        }
+    }
+    public static async Task<bool> DeletarEstabelecimento(int id)
     {
         await using (var db = new AppDbContext())
         {
@@ -168,7 +243,7 @@ public class Estabelecimento
                 db.Set<Estabelecimento>().Remove(estabelecimento);
                 await db.SaveChangesAsync();
             }
-            return estabelecimento;
+            return true;
         }
     }
     public static async Task<List<Estabelecimento>> ListarEstabelecimentos()
