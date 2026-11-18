@@ -10,7 +10,9 @@ public class Estabelecimento
     public string? Telefone { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
-    public double Avaliacao { get; set; }
+
+    public double MediaAvaliacao { get; set; }
+    public List<AvaliacaoEstabelecimentos>? Avaliacoes { get; set; }
 
     private static bool ValidarCnpj(string cnpj)
     {
@@ -72,18 +74,13 @@ public class Estabelecimento
         return true;
     }
 
-    public static async Task<Estabelecimento> CadastrarEstabelecimento(string nome, string cnpj, double latitude, double longitude, double avaliacao,  string? telefone = null)
+    public static async Task<Estabelecimento> CadastrarEstabelecimento(string nome, string cnpj, double latitude, double longitude,  string? telefone = null)
     {
         await using (var db = new AppDbContext())
         {
             if (await db.Set<Estabelecimento>().AnyAsync(e => e.Cnpj == cnpj))
             {
                 throw new ArgumentException("CNPJ já cadastrado.");
-            }
-
-            if (avaliacao < 0 || avaliacao > 5)
-            {
-                throw new ArgumentException("A avaliação deve estar entre 0 e 5.");
             }
 
             if (latitude < -90 || latitude > 90)
@@ -113,13 +110,31 @@ public class Estabelecimento
                 Telefone = telefone,
                 Latitude = Math.Round(latitude, 4),
                 Longitude = Math.Round(longitude, 4),
-                Avaliacao = Math.Round(avaliacao, 1)
             };
 
             db.Set<Estabelecimento>().Add(estabelecimento);
             await db.SaveChangesAsync();
 
             return estabelecimento;
+        }
+    }
+    public static async Task<double> CalcularMedia(int estabelecimentoId)
+    {
+        await using (var context = new AppDbContext())
+        {
+            var estabelecimento = await context.Set<Estabelecimento>()
+                .FirstOrDefaultAsync(e => e.Id == estabelecimentoId);
+
+            if (estabelecimento == null)
+                throw new Exception("Estabelecimento não encontrado.");
+
+            estabelecimento.MediaAvaliacao = await context.Set<AvaliacaoEstabelecimentos>()
+                .Where(a => a.EstabelecimentoId == estabelecimentoId)
+                .AverageAsync(a => (double?)a.Nota) ?? 0;
+
+            await context.SaveChangesAsync();
+
+            return estabelecimento.MediaAvaliacao;
         }
     }
     public static async Task<Estabelecimento?> ObterEstabelecimentoPorIdOuCnpj(string id_cnpj)
