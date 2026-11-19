@@ -10,15 +10,17 @@ public class AvaliacaoEstabelecimentos
     public Estabelecimento? Estabelecimento { get; set; }
 
     public double Nota { get; set; }
+    public string? Comentario { get; set; }
 
-    public static async Task<bool> AdicionarAvaliacao(int estabelecimentoId, double nota)
+    public static async Task<bool> AdicionarAvaliacao(int estabelecimentoId, double nota, string? comentario)
     {
         await using (var db = new AppDbContext())
         {
             var avaliacao = new AvaliacaoEstabelecimentos
             {
                 EstabelecimentoId = estabelecimentoId,
-                Nota = nota
+                Nota = nota,
+                Comentario = comentario
             };
 
             var estabelecimento = await db.Set<Estabelecimento>()

@@ -6,7 +6,7 @@ bool logado = false;
 while (!sair)
 {
     Console.Clear();
-    Console.WriteLine("Sistema de Avaliação de Estabelecimentos e Caminhos");
+    Console.WriteLine("========= Sistema de Avaliação de Estabelecimentos e Caminhos =========");
 
     Console.WriteLine("1. Login");
     Console.WriteLine("2. Cadastrar Usuário");
@@ -18,7 +18,7 @@ while (!sair)
         case "1":
             try
             {
-                Console.WriteLine("Login");
+                Console.WriteLine("========= Login =========");
 
                 Console.Write("Email: ");
                 string e_mail = Console.ReadLine() ?? string.Empty;
@@ -48,7 +48,7 @@ while (!sair)
         case "2":
             try
             {
-                Console.WriteLine("Cadastro de Usuário");
+                Console.WriteLine("========= Cadastro de Usuário =========");
 
                 Console.Write("Nome: ");
                 string nome = Console.ReadLine() ?? string.Empty;
@@ -167,7 +167,7 @@ while (!sair)
                             {
                                 foreach (var estabelecimento in estabelecimentos)
                                 {
-                                    Console.WriteLine($"ID: {estabelecimento.Id} | Nome: {estabelecimento.Nome} | CNPJ: {estabelecimento.Cnpj} | Telefone: {estabelecimento.Telefone} | Latitude: {estabelecimento.Latitude} | Longitude: {estabelecimento.Longitude}");
+                                    Console.WriteLine($"ID: {estabelecimento.Id} | Nome: {estabelecimento.Nome} | CNPJ: {estabelecimento.Cnpj} | Telefone: {estabelecimento.Telefone} | Latitude: {estabelecimento.Latitude} | Longitude: {estabelecimento.Longitude} | Média de Avaliação: {estabelecimento.MediaAvaliacao}");
                                 }
                             }
                             Console.WriteLine("Pressione qualquer tecla para continuar...");
@@ -186,7 +186,7 @@ while (!sair)
                                     var estabelecimento = await Estabelecimento.ObterEstabelecimentoPorIdOuCnpj(id.ToString());
                                     if (estabelecimento != null)
                                     {
-                                        Console.WriteLine($"ID: {estabelecimento.Id} | Nome: {estabelecimento.Nome} | CNPJ: {estabelecimento.Cnpj} | Telefone: {estabelecimento.Telefone} | Latitude: {estabelecimento.Latitude} | Longitude: {estabelecimento.Longitude}");
+                                        Console.WriteLine($"ID: {estabelecimento.Id} | Nome: {estabelecimento.Nome} | CNPJ: {estabelecimento.Cnpj} | Telefone: {estabelecimento.Telefone} | Latitude: {estabelecimento.Latitude} | Longitude: {estabelecimento.Longitude} | Média de Avaliação: {estabelecimento.MediaAvaliacao}");
                                     }
                                     else
                                     {
@@ -200,12 +200,13 @@ while (!sair)
                             }
                             else if (buscaOpcao == "2")
                             {
+                                Console.WriteLine("========= Busca por CNPJ =========");
                                 Console.Write("Digite o CNPJ do estabelecimento: ");
                                 var cnpjInput = Console.ReadLine();
                                 var estabelecimento = await Estabelecimento.ObterEstabelecimentoPorIdOuCnpj(cnpjInput ?? string.Empty);
                                 if (estabelecimento != null)
                                 {
-                                    Console.WriteLine($"ID: {estabelecimento.Id} | Nome: {estabelecimento.Nome} | CNPJ: {estabelecimento.Cnpj} | Telefone: {estabelecimento.Telefone} | Latitude: {estabelecimento.Latitude} | Longitude: {estabelecimento.Longitude}");
+                                    Console.WriteLine($"ID: {estabelecimento.Id} | Nome: {estabelecimento.Nome} | CNPJ: {estabelecimento.Cnpj} | Telefone: {estabelecimento.Telefone} | Latitude: {estabelecimento.Latitude} | Longitude: {estabelecimento.Longitude} | Média de Avaliação: {estabelecimento.MediaAvaliacao}");
                                 }
                                 else
                                 {
@@ -216,18 +217,190 @@ while (!sair)
                             {
                                 Console.WriteLine("Opção inválida.");
                             }
+                            Console.WriteLine("Pressione qualquer tecla para continuar...");
+                            Console.ReadKey();
                             break;
                         case "4":
-                            
+                            try
+                            {
+                                Console.WriteLine("========= Atualização de Estabelecimento =========");
+                                Console.Write("Digite o ID do estabelecimento que deseja atualizar: ");
+                                var idInput = Console.ReadLine();
+                                if (int.TryParse(idInput, out int id))
+                                {
+                                    var estabelecimentoExistente = await Estabelecimento.ObterEstabelecimentoPorIdOuCnpj(id.ToString());
+                                    if (estabelecimentoExistente != null)
+                                    {
+                                        Console.Write($"Nome ({estabelecimentoExistente.Nome}): ");
+                                        string nome = Console.ReadLine() ?? estabelecimentoExistente.Nome;
+                                        Console.Write($"CNPJ ({estabelecimentoExistente.Cnpj}): ");
+                                        string cnpj = Console.ReadLine() ?? estabelecimentoExistente.Cnpj;
+                                        Console.Write($"Telefone ({estabelecimentoExistente.Telefone}): ");
+                                        string? telefone = Console.ReadLine() ?? estabelecimentoExistente.Telefone;
+                                        Console.Write($"Latitude ({estabelecimentoExistente.Latitude}): ");
+                                        double latitude = double.TryParse(Console.ReadLine(), out double lat) ? lat : estabelecimentoExistente.Latitude;
+                                        Console.Write($"Longitude ({estabelecimentoExistente.Longitude}): ");
+                                        double longitude = double.TryParse(Console.ReadLine(), out double lon) ? lon : estabelecimentoExistente.Longitude;
+
+                                        bool atualizacaoSucesso = await Estabelecimento.AtualizarEstabelecimento(id, nome, cnpj, latitude, longitude, telefone);
+                                        if (atualizacaoSucesso)
+                                        {
+                                            Console.WriteLine("Estabelecimento atualizado com sucesso! Pressione qualquer tecla para continuar...");
+                                            Console.ReadKey();
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Falha ao atualizar estabelecimento. Pressione qualquer tecla para continuar...");
+                                            Console.ReadKey();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Estabelecimento não encontrado. Pressione qualquer tecla para continuar...");
+                                        Console.ReadKey();
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("ID inválido. Pressione qualquer tecla para continuar...");
+                                    Console.ReadKey();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Ocorreu um erro: {ex.Message}");
+                                Console.WriteLine("Pressione qualquer tecla para continuar...");
+                                Console.ReadKey();
+                            }
                             break;
                         case "5":
-                            
+                            try
+                            {
+                                Console.WriteLine("========= Avaliação de Estabelecimento =========");
+                                Console.Write("Digite o ID do estabelecimento que deseja avaliar: ");
+                                var idInput = Console.ReadLine();
+                                if (int.TryParse(idInput, out int id))
+                                {
+                                    var estabelecimentoExistente = await Estabelecimento.ObterEstabelecimentoPorIdOuCnpj(id.ToString());
+                                    if (estabelecimentoExistente != null)
+                                    {
+                                        Console.Write("Digite a nota da avaliação (1 a 5): ");
+                                        var notaInput = Console.ReadLine();
+                                        if (int.TryParse(notaInput, out int nota) && nota >= 1 && nota <= 5)
+                                        {
+                                            Console.Write("Digite um comentário (opcional): ");
+                                            string? comentario = Console.ReadLine();
+
+                                            bool avaliacaoSucesso = await AvaliacaoEstabelecimentos.AdicionarAvaliacao(id, nota, comentario);
+                                            if (avaliacaoSucesso)
+                                            {
+                                                Console.WriteLine("Avaliação registrada com sucesso! Pressione qualquer tecla para continuar...");
+                                                Console.ReadKey();
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine("Falha ao registrar avaliação. Pressione qualquer tecla para continuar...");
+                                                Console.ReadKey();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Nota inválida. Pressione qualquer tecla para continuar...");
+                                            Console.ReadKey();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Estabelecimento não encontrado. Pressione qualquer tecla para continuar...");
+                                        Console.ReadKey();
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("ID inválido. Pressione qualquer tecla para continuar...");
+                                    Console.ReadKey();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Ocorreu um erro: {ex.Message}");
+                                Console.WriteLine("Pressione qualquer tecla para continuar...");
+                                Console.ReadKey();
+                            }
                             break;
                         case "6":
-                            
+                            try
+                            {
+                                Console.WriteLine("========= Lista de Avaliações de Estabelecimentos =========");
+                                foreach (var estabelecimento in await Estabelecimento.ListarEstabelecimentos())
+                                {
+                                    Console.WriteLine($"ID: {estabelecimento.Id} | Nome: {estabelecimento.Nome} | CNPJ: {estabelecimento.Cnpj} | Telefone: {estabelecimento.Telefone} | Latitude: {estabelecimento.Latitude} | Longitude: {estabelecimento.Longitude} | Média de Avaliação: {estabelecimento.MediaAvaliacao}");
+                                }
+                                Console.Write("Digite o ID do estabelecimento para listar suas avaliações: ");
+                                var avaliacaoId = Console.ReadLine();
+                                var avaliacoes = await AvaliacaoEstabelecimentos.ListarAvaliacoes(int.TryParse(avaliacaoId, out int id) ? id : 0);
+                                if (avaliacoes == null || avaliacoes.Count == 0)
+                                {
+                                    Console.WriteLine("Não existem avaliações cadastradas.");
+                                }
+                                else
+                                {
+                                    foreach (var avaliacao in avaliacoes)
+                                    {
+                                        Console.WriteLine($"ID: {avaliacao.Id} | Estabelecimento ID: {avaliacao.EstabelecimentoId} | Nota: {avaliacao.Nota} | Comentário: {avaliacao.Comentario}");
+                                    }
+                                }
+                                Console.WriteLine("Pressione qualquer tecla para continuar...");
+                                Console.ReadKey();
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Ocorreu um erro: {ex.Message}");
+                                Console.WriteLine("Pressione qualquer tecla para continuar...");
+                                Console.ReadKey();
+                            }
                             break;
                         case "7":
-                            
+                            try
+                            {
+                                Console.WriteLine("========= Deletar Estabelecimento =========");
+                                Console.Write("Digite o ID do estabelecimento que deseja deletar: ");
+                                var idInput = Console.ReadLine();
+                                if (int.TryParse(idInput, out int id))
+                                {
+                                    var estabelecimentoExistente = await Estabelecimento.ObterEstabelecimentoPorIdOuCnpj(id.ToString());
+                                    if (estabelecimentoExistente != null)
+                                    {
+                                        bool deletarSucesso = await Estabelecimento.DeletarEstabelecimento(id);
+                                        if (deletarSucesso)
+                                        {
+                                            Console.WriteLine("Estabelecimento deletado com sucesso! Pressione qualquer tecla para continuar...");
+                                            Console.ReadKey();
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Falha ao deletar estabelecimento. Pressione qualquer tecla para continuar...");
+                                            Console.ReadKey();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Estabelecimento não encontrado. Pressione qualquer tecla para continuar...");
+                                        Console.ReadKey();
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("ID inválido. Pressione qualquer tecla para continuar...");
+                                    Console.ReadKey();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Ocorreu um erro: {ex.Message}");
+                                Console.WriteLine("Pressione qualquer tecla para continuar...");
+                                Console.ReadKey();
+                            }
                             break;
                         case "8":
                             sairEstabelecimento = true;

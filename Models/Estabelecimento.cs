@@ -229,9 +229,16 @@ public class Estabelecimento
     }
     public static async Task<List<Estabelecimento>> ListarEstabelecimentos()
     {
-        await using (var db = new AppDbContext())
+        try
         {
-            return await db.Set<Estabelecimento>().ToListAsync();
+            await using (var db = new AppDbContext())
+            {
+                return await db.Set<Estabelecimento>().ToListAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Erro ao listar estabelecimentos: " + ex.Message);
         }
     }
 }

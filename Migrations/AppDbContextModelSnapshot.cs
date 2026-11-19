@@ -25,6 +25,9 @@ namespace Projeto_Integrador_Plataforma_Acessibilidade_Humana.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("Comentario")
+                        .HasColumnType("longtext");
+
                     b.Property<int>("EstabelecimentoId")
                         .HasColumnType("int");
 
