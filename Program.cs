@@ -34,14 +34,14 @@ while (!sair)
                 else
                 {
                     Console.WriteLine("Email ou senha inválidos.");
-                    AguardarTecla();
+                    FuncoesAdicionais.AguardarTecla();
                 }
                 break;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Ocorreu um erro: {ex.Message}");
-                AguardarTecla();
+                FuncoesAdicionais.AguardarTecla();
                 break;
             }
         case "2":
@@ -66,19 +66,19 @@ while (!sair)
                 if (cadastroSucesso)
                 {
                     Console.WriteLine("Usuário cadastrado com sucesso!");
-                    AguardarTecla();
+                    FuncoesAdicionais.AguardarTecla();
                 }
                 else
                 {
                     Console.WriteLine("Falha ao cadastrar usuário.");
-                    AguardarTecla();
+                    FuncoesAdicionais.AguardarTecla();
                 }
                 break;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Ocorreu um erro: {ex.Message}");
-                AguardarTecla();
+                FuncoesAdicionais.AguardarTecla();
                 break;
             }
         case "3":
@@ -86,7 +86,7 @@ while (!sair)
             break;
         default:
             Console.WriteLine("Opção inválida.");
-            AguardarTecla();
+            FuncoesAdicionais.AguardarTecla();
             break;
     }
     
@@ -130,25 +130,25 @@ while (!sair)
                                 string cnpj = Console.ReadLine() ?? string.Empty;
                                 Console.Write("Telefone (opcional): ");
                                 string? telefone = Console.ReadLine();
-                                double latitude = LerDouble("Latitude: ");
-                                double longitude = LerDouble("Longitude: ");
+                                double latitude = FuncoesAdicionais.LerDouble("Latitude: ");
+                                double longitude = FuncoesAdicionais.LerDouble("Longitude: ");
 
                                 bool registroSucesso = await Estabelecimento.CadastrarEstabelecimento(nome, cnpj, latitude, longitude, telefone);
                                 if (registroSucesso)
                                 {
                                     Console.WriteLine("Estabelecimento registrado com sucesso!");
-                                    AguardarTecla();
+                                    FuncoesAdicionais.AguardarTecla();
                                 }
                                 else
                                 {
                                     Console.WriteLine("Falha ao registrar estabelecimento.");
-                                    AguardarTecla();
+                                    FuncoesAdicionais.AguardarTecla();
                                 }
                             }
                             catch (Exception ex)
                             {
                                 Console.WriteLine($"Ocorreu um erro: {ex.Message}");
-                                AguardarTecla();
+                                FuncoesAdicionais.AguardarTecla();
                             }
                             break;
                         case "2":
@@ -165,7 +165,7 @@ while (!sair)
                                     Console.WriteLine($"ID: {estabelecimento.Id} | Nome: {estabelecimento.Nome} | CNPJ: {estabelecimento.Cnpj} | Telefone: {estabelecimento.Telefone} | Latitude: {estabelecimento.Latitude} | Longitude: {estabelecimento.Longitude} | Média de Avaliação: {estabelecimento.MediaAvaliacao}");
                                 }
                             }
-                            AguardarTecla();
+                            FuncoesAdicionais.AguardarTecla();
                             break;
                         case "3":
                             Console.Write("Você gostaria de buscar o estabelecimento por ID ou CNPJ? (Digite '1' para ID ou '2' para CNPJ)");
@@ -175,7 +175,7 @@ while (!sair)
                                 Console.Write("========= Busca por ID =========");
                                 try
                                 {
-                                    int id = LerId("Digite o ID do estabelecimento: ");
+                                    int id = FuncoesAdicionais.LerId("Digite o ID do estabelecimento: ");
                                     var estabelecimento = await Estabelecimento.ObterEstabelecimentoPorIdOuCnpj(id.ToString());
                                     if (estabelecimento != null)
                                     {
@@ -210,56 +210,56 @@ while (!sair)
                             {
                                 Console.WriteLine("Opção inválida.");
                             }
-                            AguardarTecla();
+                            FuncoesAdicionais.AguardarTecla();
                             break;
                         case "4":
                             try
                             {
                                 Console.WriteLine("========= Atualização de Estabelecimento =========");
-                                int id = LerId("Digite o ID do estabelecimento que deseja atualizar: ");
+                                int id = FuncoesAdicionais.LerId("Digite o ID do estabelecimento que deseja atualizar: ");
                                 var estabelecimentoExistente = await Estabelecimento.ObterEstabelecimentoPorIdOuCnpj(id.ToString());
                                 if (estabelecimentoExistente == null)
                                 {
                                     Console.WriteLine("Estabelecimento não encontrado.");
-                                    AguardarTecla();
+                                    FuncoesAdicionais.AguardarTecla();
                                 }
                                 else
                                 {
-                                    string nome = LerTextoOpcional("Nome", estabelecimentoExistente.Nome);
-                                    string cnpj = LerTextoOpcional("CNPJ", estabelecimentoExistente.Cnpj);
-                                    string? telefone = LerTextoOpcional("Telefone", estabelecimentoExistente.Telefone ?? string.Empty);
-                                    double latitude = LerDoubleOpcional("Latitude", estabelecimentoExistente.Latitude);
-                                    double longitude = LerDoubleOpcional("Longitude", estabelecimentoExistente.Longitude);
+                                    string nome = FuncoesAdicionais.LerTextoOpcional("Nome", estabelecimentoExistente.Nome);
+                                    string cnpj = FuncoesAdicionais.LerTextoOpcional("CNPJ", estabelecimentoExistente.Cnpj);
+                                    string? telefone = FuncoesAdicionais.LerTextoOpcional("Telefone", estabelecimentoExistente.Telefone ?? string.Empty);
+                                    double latitude = FuncoesAdicionais.LerDoubleOpcional("Latitude", estabelecimentoExistente.Latitude);
+                                    double longitude = FuncoesAdicionais.LerDoubleOpcional("Longitude", estabelecimentoExistente.Longitude);
 
                                     bool atualizacaoSucesso = await Estabelecimento.AtualizarEstabelecimento(id, nome, cnpj, latitude, longitude, telefone);
                                     if (atualizacaoSucesso)
                                     {
                                         Console.WriteLine("Estabelecimento atualizado com sucesso!");
-                                        AguardarTecla();
+                                        FuncoesAdicionais.AguardarTecla();
                                     }
                                     else
                                     {
                                         Console.WriteLine("Falha ao atualizar estabelecimento.");
-                                        AguardarTecla();
+                                        FuncoesAdicionais.AguardarTecla();
                                     }
                                 }
                             }
                             catch (Exception ex)
                             {
                                 Console.WriteLine($"Ocorreu um erro: {ex.Message}");
-                                AguardarTecla();
+                                FuncoesAdicionais.AguardarTecla();
                             }
                             break;
                         case "5":
                             try
                             {
                                 Console.WriteLine("========= Avaliação de Estabelecimento =========");
-                                int id = LerId("Digite o ID do estabelecimento que deseja avaliar: ");
+                                int id = FuncoesAdicionais.LerId("Digite o ID do estabelecimento que deseja avaliar: ");
                                 var estabelecimentoExistente = await Estabelecimento.ObterEstabelecimentoPorIdOuCnpj(id.ToString());
                                 if (estabelecimentoExistente == null)
                                 {
                                     Console.WriteLine("Estabelecimento não encontrado.");
-                                    AguardarTecla();
+                                    FuncoesAdicionais.AguardarTecla();
                                 }
                                 else
                                 {
@@ -274,25 +274,25 @@ while (!sair)
                                         if (avaliacaoSucesso)
                                         {
                                             Console.WriteLine("Avaliação registrada com sucesso!");
-                                            AguardarTecla();
+                                            FuncoesAdicionais.AguardarTecla();
                                         }
                                         else
                                         {
                                             Console.WriteLine("Falha ao registrar avaliação.");
-                                            AguardarTecla();
+                                            FuncoesAdicionais.AguardarTecla();
                                         }
                                     }
                                     else
                                     {
                                         Console.WriteLine("Nota inválida.");
-                                        AguardarTecla();
+                                        FuncoesAdicionais.AguardarTecla();
                                     }
                                 }
                             }
                             catch (Exception ex)
                             {
                                 Console.WriteLine($"Ocorreu um erro: {ex.Message}");
-                                AguardarTecla();
+                                FuncoesAdicionais.AguardarTecla();
                             }
                             break;
                         case "6":
@@ -303,7 +303,7 @@ while (!sair)
                                 {
                                     Console.WriteLine($"ID: {estabelecimento.Id} | Nome: {estabelecimento.Nome} | CNPJ: {estabelecimento.Cnpj} | Telefone: {estabelecimento.Telefone} | Latitude: {estabelecimento.Latitude} | Longitude: {estabelecimento.Longitude} | Média de Avaliação: {estabelecimento.MediaAvaliacao}");
                                 }
-                                int estabelecimentoId = LerId("Digite o ID do estabelecimento para listar suas avaliações: ");
+                                int estabelecimentoId = FuncoesAdicionais.LerId("Digite o ID do estabelecimento para listar suas avaliações: ");
                                 var avaliacoes = await AvaliacaoEstabelecimentos.ListarAvaliacoes(estabelecimentoId);
                                 if (avaliacoes == null || avaliacoes.Count == 0)
                                 {
@@ -316,24 +316,24 @@ while (!sair)
                                         Console.WriteLine($"ID: {avaliacao.Id} | Estabelecimento ID: {avaliacao.EstabelecimentoId} | Nota: {avaliacao.Nota} | Comentário: {avaliacao.Comentario}");
                                     }
                                 }
-                                AguardarTecla();
+                                FuncoesAdicionais.AguardarTecla();
                             }
                             catch (Exception ex)
                             {
                                 Console.WriteLine($"Ocorreu um erro: {ex.Message}");
-                                AguardarTecla();
+                                FuncoesAdicionais.AguardarTecla();
                             }
                             break;
                         case "7":
                             try
                             {
                                 Console.WriteLine("========= Deletar Estabelecimento =========");
-                                int id = LerId("Digite o ID do estabelecimento que deseja deletar: ");
+                                int id = FuncoesAdicionais.LerId("Digite o ID do estabelecimento que deseja deletar: ");
                                 var estabelecimentoExistente = await Estabelecimento.ObterEstabelecimentoPorIdOuCnpj(id.ToString());
                                 if (estabelecimentoExistente == null)
                                 {
                                     Console.WriteLine("Estabelecimento não encontrado.");
-                                    AguardarTecla();
+                                    FuncoesAdicionais.AguardarTecla();
                                 }
                                 else
                                 {
@@ -341,19 +341,19 @@ while (!sair)
                                     if (deletarSucesso)
                                     {
                                         Console.WriteLine("Estabelecimento deletado com sucesso!");
-                                        AguardarTecla();
+                                        FuncoesAdicionais.AguardarTecla();
                                     }
                                     else
                                     {
                                         Console.WriteLine("Falha ao deletar estabelecimento.");
-                                        AguardarTecla();
+                                        FuncoesAdicionais.AguardarTecla();
                                     }
                                 }
                             }
                             catch (Exception ex)
                             {
                                 Console.WriteLine($"Ocorreu um erro: {ex.Message}");
-                                AguardarTecla();
+                                FuncoesAdicionais.AguardarTecla();
                             }
                             break;
                         case "8":
@@ -361,7 +361,7 @@ while (!sair)
                             break;
                         default:
                             Console.WriteLine("Opção inválida.");
-                            AguardarTecla();
+                            FuncoesAdicionais.AguardarTecla();
                             break;
                     }
                 }
@@ -392,7 +392,7 @@ while (!sair)
                                     if (estabelecimentosDisponiveis.Count == 0)
                                     {
                                         Console.WriteLine("Cadastre um estabelecimento antes de cadastrar um caminho.");
-                                        AguardarTecla();
+                                        FuncoesAdicionais.AguardarTecla();
                                         break;
                                     }
 
@@ -402,21 +402,21 @@ while (!sair)
                                         Console.WriteLine($"ID: {item.Id} | Nome: {item.Nome}");
                                     }
 
-                                    int estabelecimentoId = LerId("ID do estabelecimento associado: ");
+                                    int estabelecimentoId = FuncoesAdicionais.LerId("ID do estabelecimento associado: ");
                                     var estabelecimento = await Estabelecimento.ObterEstabelecimentoPorIdOuCnpj(estabelecimentoId.ToString());
                                     if (estabelecimento == null)
                                     {
                                         Console.WriteLine("Estabelecimento não encontrado.");
-                                        AguardarTecla();
+                                        FuncoesAdicionais.AguardarTecla();
                                         break;
                                     }
 
-                                    double latitude = LerDouble("Latitude de partida: ");
-                                    double longitude = LerDouble("Longitude de partida: ");
-                                    double avaliacao = LerDouble("Avaliação (0 a 5): ");
+                                    double latitude = FuncoesAdicionais.LerDouble("Latitude de partida: ");
+                                    double longitude = FuncoesAdicionais.LerDouble("Longitude de partida: ");
+                                    double avaliacao = FuncoesAdicionais.LerDouble("Avaliação (0 a 5): ");
                                     Console.Write("Descrição: ");
                                     string descricao = Console.ReadLine() ?? string.Empty;
-                                    ValidarDadosCaminho(latitude, longitude, avaliacao, descricao);
+                                    FuncoesAdicionais.ValidarDadosCaminho(latitude, longitude, avaliacao, descricao);
 
                                     await Caminho.CadastrarCaminho(latitude, longitude, estabelecimento, avaliacao, descricao);
                                     Console.WriteLine("Caminho cadastrado com sucesso.");
@@ -425,7 +425,7 @@ while (!sair)
                                 {
                                     Console.WriteLine($"Não foi possível cadastrar o caminho: {ex.Message}");
                                 }
-                                AguardarTecla();
+                                FuncoesAdicionais.AguardarTecla();
                                 break;
 
                             case "2":
@@ -438,7 +438,7 @@ while (!sair)
                                         Console.WriteLine($"ID: {item.Id} | Nome: {item.Nome}");
                                     }
 
-                                    int estabelecimentoId = LerId("ID do estabelecimento: ");
+                                    int estabelecimentoId = FuncoesAdicionais.LerId("ID do estabelecimento: ");
                                     var caminhos = await Caminho.ListarCaminhosPorEstabelecimento(estabelecimentoId);
                                     if (caminhos.Count == 0)
                                     {
@@ -448,7 +448,7 @@ while (!sair)
                                     {
                                         foreach (var caminho in caminhos)
                                         {
-                                            ExibirCaminho(caminho);
+                                            FuncoesAdicionais.ExibirCaminho(caminho);
                                         }
                                     }
                                 }
@@ -456,14 +456,14 @@ while (!sair)
                                 {
                                     Console.WriteLine($"Não foi possível listar os caminhos: {ex.Message}");
                                 }
-                                AguardarTecla();
+                                FuncoesAdicionais.AguardarTecla();
                                 break;
 
                             case "3":
                                 try
                                 {
                                     Console.WriteLine("========= Buscar Caminho =========");
-                                    int caminhoId = LerId("ID do caminho: ");
+                                    int caminhoId = FuncoesAdicionais.LerId("ID do caminho: ");
                                     var caminho = await Caminho.ObterCaminhoPorId(caminhoId);
                                     if (caminho == null)
                                     {
@@ -471,33 +471,33 @@ while (!sair)
                                     }
                                     else
                                     {
-                                        ExibirCaminho(caminho);
+                                        FuncoesAdicionais.ExibirCaminho(caminho);
                                     }
                                 }
                                 catch (Exception ex)
                                 {
                                     Console.WriteLine($"Não foi possível buscar o caminho: {ex.Message}");
                                 }
-                                AguardarTecla();
+                                FuncoesAdicionais.AguardarTecla();
                                 break;
 
                             case "4":
                                 try
                                 {
                                     Console.WriteLine("========= Atualizar Caminho =========");
-                                    int caminhoId = LerId("ID do caminho que deseja atualizar: ");
+                                    int caminhoId = FuncoesAdicionais.LerId("ID do caminho que deseja atualizar: ");
                                     var caminho = await Caminho.ObterCaminhoPorId(caminhoId);
                                     if (caminho == null)
                                     {
                                         Console.WriteLine("Caminho não encontrado.");
-                                        AguardarTecla();
+                                        FuncoesAdicionais.AguardarTecla();
                                         break;
                                     }
 
-                                    ExibirCaminho(caminho);
-                                    double latitude = LerDoubleOpcional("Latitude de partida", caminho.LatitudePartida);
-                                    double longitude = LerDoubleOpcional("Longitude de partida", caminho.LongitudePartida);
-                                    double avaliacao = LerDoubleOpcional("Avaliação (0 a 5)", caminho.Avaliacao);
+                                    FuncoesAdicionais.ExibirCaminho(caminho);
+                                    double latitude = FuncoesAdicionais.LerDoubleOpcional("Latitude de partida", caminho.LatitudePartida);
+                                    double longitude = FuncoesAdicionais.LerDoubleOpcional("Longitude de partida", caminho.LongitudePartida);
+                                    double avaliacao = FuncoesAdicionais.LerDoubleOpcional("Avaliação (0 a 5)", caminho.Avaliacao);
                                     Console.Write($"ID do estabelecimento ({caminho.Estabelecimento?.Id}): ");
                                     string estabelecimentoIdInput = Console.ReadLine() ?? string.Empty;
                                     int estabelecimentoId;
@@ -516,8 +516,9 @@ while (!sair)
                                         throw new ArgumentException("Estabelecimento não encontrado.");
                                     }
 
-                                    string descricao = LerTextoOpcional("Descrição", caminho.Descricao);
-                                    ValidarDadosCaminho(latitude, longitude, avaliacao, descricao);
+
+                                    string descricao = FuncoesAdicionais.LerTextoOpcional("Descrição", caminho.Descricao);
+                                    FuncoesAdicionais.ValidarDadosCaminho(latitude, longitude, avaliacao, descricao);
                                     await Caminho.AtualizarCaminho(caminhoId, latitude, longitude, estabelecimento, avaliacao, descricao);
                                     Console.WriteLine("Caminho atualizado com sucesso.");
                                 }
@@ -525,14 +526,14 @@ while (!sair)
                                 {
                                     Console.WriteLine($"Não foi possível atualizar o caminho: {ex.Message}");
                                 }
-                                AguardarTecla();
+                                FuncoesAdicionais.AguardarTecla();
                                 break;
 
                             case "5":
                                 try
                                 {
                                     Console.WriteLine("========= Deletar Caminho =========");
-                                    int caminhoId = LerId("ID do caminho que deseja deletar: ");
+                                    int caminhoId = FuncoesAdicionais.LerId("ID do caminho que deseja deletar: ");
                                     Console.Write("Confirma a exclusão? (S/N): ");
                                     string confirmacao = Console.ReadLine() ?? string.Empty;
                                     if (!string.Equals(confirmacao.Trim(), "S", StringComparison.OrdinalIgnoreCase))
@@ -549,7 +550,7 @@ while (!sair)
                                 {
                                     Console.WriteLine($"Não foi possível deletar o caminho: {ex.Message}");
                                 }
-                                AguardarTecla();
+                                FuncoesAdicionais.AguardarTecla();
                                 break;
 
                             case "6":
@@ -558,7 +559,7 @@ while (!sair)
 
                             default:
                                 Console.WriteLine("Opção inválida.");
-                                AguardarTecla();
+                                FuncoesAdicionais.AguardarTecla();
                                 break;
                         }
                     }
@@ -569,90 +570,8 @@ while (!sair)
                 break;
             default:
                 Console.WriteLine("Opção inválida.");
-                AguardarTecla();
+                FuncoesAdicionais.AguardarTecla();
                 break;
         }
     }
-}
-
-static void AguardarTecla()
-{
-    Console.WriteLine("Pressione qualquer tecla para continuar...");
-    Console.ReadKey();
-}
-
-static int LerId(string mensagem)
-{
-    Console.Write(mensagem);
-    if (!int.TryParse(Console.ReadLine(), out int id) || id <= 0)
-    {
-        throw new ArgumentException("ID inválido. Informe um número inteiro positivo.");
-    }
-
-    return id;
-}
-
-static double LerDouble(string mensagem)
-{
-    Console.Write(mensagem);
-    if (!double.TryParse(Console.ReadLine(), out double valor) || !double.IsFinite(valor))
-    {
-        throw new ArgumentException("Valor inválido. Informe um número.");
-    }
-
-    return valor;
-}
-
-static double LerDoubleOpcional(string mensagem, double valorAtual)
-{
-    Console.Write($"{mensagem} ({valorAtual}): ");
-    string entrada = Console.ReadLine() ?? string.Empty;
-    if (string.IsNullOrWhiteSpace(entrada))
-    {
-        return valorAtual;
-    }
-
-    if (!double.TryParse(entrada, out double valor) || !double.IsFinite(valor))
-    {
-        throw new ArgumentException("Valor inválido. Informe um número ou deixe em branco para manter o atual.");
-    }
-
-    return valor;
-}
-
-static string LerTextoOpcional(string mensagem, string valorAtual)
-{
-    Console.Write($"{mensagem} ({valorAtual}): ");
-    string entrada = Console.ReadLine() ?? string.Empty;
-    return string.IsNullOrWhiteSpace(entrada) ? valorAtual : entrada.Trim();
-}
-
-static void ValidarDadosCaminho(double latitude, double longitude, double avaliacao, string descricao)
-{
-    if (latitude < -90 || latitude > 90)
-    {
-        throw new ArgumentException("A latitude deve estar entre -90 e 90.");
-    }
-
-    if (longitude < -180 || longitude > 180)
-    {
-        throw new ArgumentException("A longitude deve estar entre -180 e 180.");
-    }
-
-    if (avaliacao < 0 || avaliacao > 5)
-    {
-        throw new ArgumentException("A avaliação deve estar entre 0 e 5.");
-    }
-
-    if (string.IsNullOrWhiteSpace(descricao))
-    {
-        throw new ArgumentException("A descrição do caminho não pode ficar vazia.");
-    }
-}
-
-static void ExibirCaminho(Caminho caminho)
-{
-    Console.WriteLine($"ID: {caminho.Id} | Estabelecimento: {caminho.Estabelecimento?.Nome ?? "não vinculado"} (ID: {caminho.Estabelecimento?.Id})");
-    Console.WriteLine($"Partida: latitude {caminho.LatitudePartida}, longitude {caminho.LongitudePartida} | Avaliação: {caminho.Avaliacao}");
-    Console.WriteLine($"Descrição: {caminho.Descricao}");
 }
