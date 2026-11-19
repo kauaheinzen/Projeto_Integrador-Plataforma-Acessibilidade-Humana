@@ -1,4 +1,5 @@
-﻿using PI.Models;
+﻿using Google.Protobuf;
+using PI.Models;
 
 bool sair = false;
 bool logado = false;
@@ -103,7 +104,140 @@ while (!sair)
         switch (opcaoLogado)
         {
             case "1":
-                // Lógica para avaliar estabelecimento
+                bool sairEstabelecimento = false;
+                while (!sairEstabelecimento)
+                {
+                    Console.Clear();
+                    Console.WriteLine("========= Menu Estabelecimento =========");
+                    Console.WriteLine("1. Registrar Estabelecimento");
+                    Console.WriteLine("2. Listar Estabelecimentos");
+                    Console.WriteLine("3. Obter Estabelecimento por ID ou CNPJ");
+                    Console.WriteLine("4. Atualizar Estabelecimento");
+                    Console.WriteLine("5. Avaliar Estabelecimento");
+                    Console.WriteLine("6. Listar Avaliações de Estabelecimentos");
+                    Console.WriteLine("7. Deletar Estabelecimento");
+                    Console.WriteLine("8. Voltar");
+                    Console.Write("Escolha uma opção: ");
+                    var opcaoEstabelecimento = Console.ReadLine();
+                    switch (opcaoEstabelecimento)
+                    {
+                        case "1":
+                        try
+                        {
+                                Console.WriteLine("========= Registro de Estabelecimento =========");
+
+                                Console.Write("Nome: ");
+                                string nome = Console.ReadLine() ?? string.Empty;
+                                Console.Write("CNPJ: ");
+                                string cnpj = Console.ReadLine() ?? string.Empty;
+                                Console.Write("Telefone (opcional): ");
+                                string? telefone = Console.ReadLine();
+                                Console.Write("Latitude: ");
+                                double latitude = double.Parse(Console.ReadLine());
+                                Console.Write("Longitude: ");
+                                double longitude = double.Parse(Console.ReadLine());
+
+                                bool registroSucesso = await Estabelecimento.CadastrarEstabelecimento(nome, cnpj, latitude, longitude, telefone);
+                                if (registroSucesso)
+                                {
+                                    Console.WriteLine("Estabelecimento registrado com sucesso! Pressione qualquer tecla para continuar...");
+                                    Console.ReadKey();
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Falha ao registrar estabelecimento. Pressione qualquer tecla para continuar...");
+                                    Console.ReadKey();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Ocorreu um erro: {ex.Message}");
+                                Console.WriteLine("Pressione qualquer tecla para continuar...");
+                                Console.ReadKey();
+                            }
+                            break;
+                        case "2":
+                            Console.WriteLine("========= Lista de Estabelecimentos =========");
+                            var estabelecimentos = await Estabelecimento.ListarEstabelecimentos();
+                            if (estabelecimentos == null || estabelecimentos.Count == 0)
+                            {
+                                Console.WriteLine("Não existem estabelecimentos cadastrados.");
+                            }
+                            else
+                            {
+                                foreach (var estabelecimento in estabelecimentos)
+                                {
+                                    Console.WriteLine($"ID: {estabelecimento.Id} | Nome: {estabelecimento.Nome} | CNPJ: {estabelecimento.Cnpj} | Telefone: {estabelecimento.Telefone} | Latitude: {estabelecimento.Latitude} | Longitude: {estabelecimento.Longitude}");
+                                }
+                            }
+                            Console.WriteLine("Pressione qualquer tecla para continuar...");
+                            Console.ReadKey();
+                            break;
+                        case "3":
+                            Console.Write("Você gostaria de buscar o estabelecimento por ID ou CNPJ? (Digite '1' para ID ou '2' para CNPJ)");
+                            var buscaOpcao = Console.ReadLine();
+                            if (buscaOpcao == "1")
+                            {
+                                Console.Write("========= Busca por ID =========");
+                                Console.Write("Digite o ID do estabelecimento: ");
+                                var idInput = Console.ReadLine();
+                                if (int.TryParse(idInput, out int id))
+                                {
+                                    var estabelecimento = await Estabelecimento.ObterEstabelecimentoPorIdOuCnpj(id.ToString());
+                                    if (estabelecimento != null)
+                                    {
+                                        Console.WriteLine($"ID: {estabelecimento.Id} | Nome: {estabelecimento.Nome} | CNPJ: {estabelecimento.Cnpj} | Telefone: {estabelecimento.Telefone} | Latitude: {estabelecimento.Latitude} | Longitude: {estabelecimento.Longitude}");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Estabelecimento não encontrado.");
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("ID inválido.");
+                                }
+                            }
+                            else if (buscaOpcao == "2")
+                            {
+                                Console.Write("Digite o CNPJ do estabelecimento: ");
+                                var cnpjInput = Console.ReadLine();
+                                var estabelecimento = await Estabelecimento.ObterEstabelecimentoPorIdOuCnpj(cnpjInput ?? string.Empty);
+                                if (estabelecimento != null)
+                                {
+                                    Console.WriteLine($"ID: {estabelecimento.Id} | Nome: {estabelecimento.Nome} | CNPJ: {estabelecimento.Cnpj} | Telefone: {estabelecimento.Telefone} | Latitude: {estabelecimento.Latitude} | Longitude: {estabelecimento.Longitude}");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Estabelecimento não encontrado.");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Opção inválida.");
+                            }
+                            break;
+                        case "4":
+                            
+                            break;
+                        case "5":
+                            
+                            break;
+                        case "6":
+                            
+                            break;
+                        case "7":
+                            
+                            break;
+                        case "8":
+                            sairEstabelecimento = true;
+                            break;
+                        default:
+                            Console.WriteLine("Opção inválida. Pressione qualquer tecla para continuar...");
+                            Console.ReadKey();
+                            break;
+                    }
+                }
                 break;
             case "2":
                 // Lógica para avaliar caminho

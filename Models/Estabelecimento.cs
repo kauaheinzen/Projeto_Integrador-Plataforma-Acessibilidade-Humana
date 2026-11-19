@@ -118,25 +118,6 @@ public class Estabelecimento
             return true;
         }
     }
-    public static async Task<double> CalcularMedia(int estabelecimentoId)
-    {
-        await using (var context = new AppDbContext())
-        {
-            var estabelecimento = await context.Set<Estabelecimento>()
-                .FirstOrDefaultAsync(e => e.Id == estabelecimentoId);
-
-            if (estabelecimento == null)
-                throw new Exception("Estabelecimento não encontrado.");
-
-            estabelecimento.MediaAvaliacao = await context.Set<AvaliacaoEstabelecimentos>()
-                .Where(a => a.EstabelecimentoId == estabelecimentoId)
-                .AverageAsync(a => (double?)a.Nota) ?? 0;
-
-            await context.SaveChangesAsync();
-
-            return estabelecimento.MediaAvaliacao;
-        }
-    }
     public static async Task<Estabelecimento?> ObterEstabelecimentoPorIdOuCnpj(string id_cnpj)
     {
         await using (var db = new AppDbContext())
