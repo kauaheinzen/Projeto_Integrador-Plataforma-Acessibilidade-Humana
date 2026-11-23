@@ -1,5 +1,4 @@
-﻿using Google.Protobuf;
-using PI.Models;
+﻿using PI.Models;
 
 bool sair = false;
 bool logado = false;
