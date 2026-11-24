@@ -5,17 +5,14 @@ public class Usuario
 {
     public int Id { get; set; }
     public string Nome { get; set; } = string.Empty;
+    private string cpf = string.Empty;
     public string Cpf
     {
         // fazer validador de cpf
-        get { return Cpf; }
+        get { return cpf; }
         set
         {
-            if (value.Length != 11)
-            {
-                throw new ArgumentException("O CPF deve ter 11 dígitos.");
-            }
-            Cpf = new string(value.Where(char.IsDigit).ToArray());
+            cpf = new string(value.Where(char.IsDigit).ToArray());
         }
     }
     public string Email { get; set; }
@@ -164,7 +161,7 @@ public class Usuario
         await using (var db = new AppDbContext())
         {
             var usuario = await db.Usuarios.FirstOrDefaultAsync(u => u.Email == email && u.Senha == senha);
-            return usuario.Id != 0 ? usuario : null;
+            return usuario;
         }
     }
     public static async Task<bool> DeletarUsuario(int id)

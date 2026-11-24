@@ -24,11 +24,12 @@ while (!sair)
                 Console.Write("Senha: ");
                 string senha = Console.ReadLine() ?? string.Empty;
 
-                Usuario? usuario = await Usuario.AutenticarUsuario(e_mail, senha);
+                var usuario = await Usuario.AutenticarUsuario(e_mail, senha);
                 if (usuario != null)
                 {
                     Console.WriteLine($"Bem-vindo, {usuario.Nome}!");
                     logado = true;
+                    FuncoesAdicionais.AguardarTecla();
                 }
                 else
                 {
@@ -167,11 +168,11 @@ while (!sair)
                             FuncoesAdicionais.AguardarTecla();
                             break;
                         case "3":
-                            Console.Write("Você gostaria de buscar o estabelecimento por ID ou CNPJ? (Digite '1' para ID ou '2' para CNPJ)");
+                            Console.Write("Você gostaria de buscar o estabelecimento por ID ou CNPJ? (Digite '1' para ID ou '2' para CNPJ): ");
                             var buscaOpcao = Console.ReadLine();
                             if (buscaOpcao == "1")
                             {
-                                Console.Write("========= Busca por ID =========");
+                                Console.WriteLine("========= Busca por ID =========");
                                 try
                                 {
                                     int id = FuncoesAdicionais.LerId("Digite o ID do estabelecimento: ");
@@ -264,7 +265,8 @@ while (!sair)
                                 {
                                     Console.Write("Digite a nota da avaliação (1 a 5): ");
                                     var notaInput = Console.ReadLine();
-                                    if (int.TryParse(notaInput, out int nota) && nota >= 1 && nota <= 5)
+                                    notaInput = notaInput?.Replace('.',',');
+                                    if (double.TryParse(notaInput, out double nota) && nota >= 1 && nota <= 5)
                                     {
                                         Console.Write("Digite um comentário (opcional): ");
                                         string? comentario = Console.ReadLine();
@@ -297,13 +299,14 @@ while (!sair)
                         case "6":
                             try
                             {
-                                Console.WriteLine("========= Lista de Avaliações de Estabelecimentos =========");
+                                Console.WriteLine("========= Lista de Estabelecimentos =========");
                                 foreach (var estabelecimento in await Estabelecimento.ListarEstabelecimentos())
                                 {
                                     Console.WriteLine($"ID: {estabelecimento.Id} | Nome: {estabelecimento.Nome} | CNPJ: {estabelecimento.Cnpj} | Telefone: {estabelecimento.Telefone} | Latitude: {estabelecimento.Latitude} | Longitude: {estabelecimento.Longitude} | Média de Avaliação: {estabelecimento.MediaAvaliacao}");
                                 }
                                 int estabelecimentoId = FuncoesAdicionais.LerId("Digite o ID do estabelecimento para listar suas avaliações: ");
                                 var avaliacoes = await AvaliacaoEstabelecimentos.ListarAvaliacoes(estabelecimentoId);
+                                Console.WriteLine("========= Avaliações do Estabelecimento =========");
                                 if (avaliacoes == null || avaliacoes.Count == 0)
                                 {
                                     Console.WriteLine("Não existem avaliações cadastradas.");
