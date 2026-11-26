@@ -420,7 +420,7 @@ while (!sair)
                                     string descricao = Console.ReadLine() ?? string.Empty;
                                     FuncoesAdicionais.ValidarDadosCaminho(latitude, longitude, avaliacao, descricao);
 
-                                    await Caminho.CadastrarCaminho(latitude, longitude, estabelecimento, avaliacao, descricao);
+                                    await Caminho.CadastrarCaminho(latitude, longitude, estabelecimento.Id, avaliacao, descricao);
                                     Console.WriteLine("Caminho cadastrado com sucesso.");
                                 }
                                 catch (Exception ex)
@@ -521,7 +521,7 @@ while (!sair)
 
                                     string descricao = FuncoesAdicionais.LerTextoOpcional("Descrição", caminho.Descricao);
                                     FuncoesAdicionais.ValidarDadosCaminho(latitude, longitude, avaliacao, descricao);
-                                    await Caminho.AtualizarCaminho(caminhoId, latitude, longitude, estabelecimento, avaliacao, descricao);
+                                    await Caminho.AtualizarCaminho(caminhoId, latitude, longitude, estabelecimento.Id, avaliacao, descricao);
                                     Console.WriteLine("Caminho atualizado com sucesso.");
                                 }
                                 catch (Exception ex)
