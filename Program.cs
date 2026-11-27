@@ -420,7 +420,7 @@ while (!sair)
                                     string descricao = Console.ReadLine() ?? string.Empty;
                                     FuncoesAdicionais.ValidarDadosCaminho(latitude, longitude, avaliacao, descricao);
 
-                                    await Caminho.CadastrarCaminho(latitude, longitude, estabelecimento.Id, avaliacao, descricao);
+                                    await Caminho.CadastrarCaminho(latitude, longitude, estabelecimento, avaliacao, descricao);
                                     Console.WriteLine("Caminho cadastrado com sucesso.");
                                 }
                                 catch (Exception ex)
