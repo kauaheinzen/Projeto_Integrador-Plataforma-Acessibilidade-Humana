@@ -27,11 +27,17 @@ public class Caminho
                 throw new ArgumentException("A longitude deve estar entre -180 e 180.");
             }
 
+            var _estabelecimento = await context.Set<Estabelecimento>().FindAsync(estabelecimento.Id);
+            if (_estabelecimento == null)
+            {
+                throw new ArgumentException("Estabelecimento não encontrado.");
+            }
+
             var caminho = new Caminho
             {
                 LatitudePartida = Math.Round(latitudePartida, 4),
                 LongitudePartida = Math.Round(longitudePartida, 4),
-                Estabelecimento = estabelecimento,
+                Estabelecimento = _estabelecimento,
                 Avaliacao = Math.Round(avaliacao, 1),
                 Descricao = descricao
             };
@@ -42,13 +48,17 @@ public class Caminho
             return true;
         }
     }
+
     public static async Task<Caminho?> ObterCaminhoPorId(int id)
     {
         await using (var context = new AppDbContext())
         {
-            return await context.Set<Caminho>().Include(c => c.Estabelecimento).FirstOrDefaultAsync(c => c.Id == id);
+            return await context.Set<Caminho>()
+                .Include(c => c.Estabelecimento)
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
     }
+
     public static async Task<List<Caminho>> ListarCaminhosPorEstabelecimento(int estabelecimentoId)
     {
         await using (var context = new AppDbContext())
@@ -59,14 +69,36 @@ public class Caminho
                 .ToListAsync();
         }
     }
-    public static async Task<bool> AtualizarCaminho(int id, double latitudePartida, double longitudePartida, Estabelecimento estabelecimento, double avaliacao, string descricao)
+
+    public static async Task<bool> AtualizarCaminho(int id, double latitudePartida, double longitudePartida, int estabelecimentoId, double avaliacao, string descricao)
     {
         await using (var context = new AppDbContext())
         {
-            var caminho = await context.Set<Caminho>().Include(c => c.Estabelecimento).FirstOrDefaultAsync(c => c.Id == id);
+            if (avaliacao < 0 || avaliacao > 5)
+            {
+                throw new ArgumentException("A avaliação deve estar entre 0 e 5.");
+            }
+            if (latitudePartida < -90 || latitudePartida > 90)
+            {
+                throw new ArgumentException("A latitude deve estar entre -90 e 90.");
+            }
+            if (longitudePartida < -180 || longitudePartida > 180)
+            {
+                throw new ArgumentException("A longitude deve estar entre -180 e 180.");
+            }
+
+            var caminho = await context.Set<Caminho>()
+                .Include(c => c.Estabelecimento)
+                .FirstOrDefaultAsync(c => c.Id == id);
             if (caminho == null)
             {
                 throw new Exception("Caminho não encontrado.");
+            }
+
+            var estabelecimento = await context.Set<Estabelecimento>().FindAsync(estabelecimentoId);
+            if (estabelecimento == null)
+            {
+                throw new ArgumentException("Estabelecimento não encontrado.");
             }
 
             caminho.LatitudePartida = Math.Round(latitudePartida, 4);
@@ -80,6 +112,7 @@ public class Caminho
             return true;
         }
     }
+
     public static async Task<bool> DeletarCaminho(int id)
     {
         await using (var context = new AppDbContext())
