@@ -5,12 +5,11 @@ namespace PI.Models;
 public class Caminho
 {
     public int Id { get; set; }
-    public double LatitudePartida { get; set; }
-    public double LongitudePartida { get; set; }
-    public Estabelecimento? Estabelecimento { get; set; }
-    public double Avaliacao { get; set; }
-    public string Descricao { get; set; } = string.Empty;
-
+    public double LatitudePartida { get; private set; }
+    public double LongitudePartida { get; private set; }
+    public Estabelecimento? Estabelecimento { get; private set; }
+    public double Avaliacao { get; private set; }
+    public string Descricao { get; private set; } = string.Empty;
     public static async Task<bool> CadastrarCaminho(double latitudePartida, double longitudePartida, Estabelecimento estabelecimento, double avaliacao, string descricao)
     {
         await using (var context = new AppDbContext())

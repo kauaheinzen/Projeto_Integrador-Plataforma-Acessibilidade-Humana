@@ -6,11 +6,11 @@ public class AvaliacaoEstabelecimentos
 {
     public int Id { get; set; }
 
-    public int EstabelecimentoId { get; set; }
-    public Estabelecimento? Estabelecimento { get; set; }
+    public int EstabelecimentoId { get; private set; }
+    public Estabelecimento? Estabelecimento { get; private set; }
 
-    public double Nota { get; set; }
-    public string? Comentario { get; set; }
+    public double Nota { get; private set; }
+    public string? Comentario { get; private set; }
 
     public static async Task<bool> AdicionarAvaliacao(int estabelecimentoId, double nota, string? comentario)
     {

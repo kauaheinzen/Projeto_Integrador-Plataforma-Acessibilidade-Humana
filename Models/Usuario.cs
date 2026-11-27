@@ -4,7 +4,7 @@ namespace PI.Models;
 public class Usuario
 {
     public int Id { get; set; }
-    public string Nome { get; set; } = string.Empty;
+    public string Nome { get; private set; } = string.Empty;
     private string cpf = string.Empty;
     public string Cpf
     {
@@ -15,10 +15,10 @@ public class Usuario
             cpf = new string(value.Where(char.IsDigit).ToArray());
         }
     }
-    public string Email { get; set; }
-    public string Senha { get; set; }
-    public string? Telefone { get; set; }
-    public string? Endereco { get; set; }
+    public string Email { get; private set; }
+    public string Senha { get; private set; }
+    public string? Telefone { get; private set; }
+    public string? Endereco { get; private set; }
 
     private static bool CpfValido(string cpf)
     {

@@ -5,14 +5,14 @@ namespace PI.Models;
 public class Estabelecimento
 {
     public int Id { get; set; }
-    public string Nome { get; set; } = string.Empty;
+    public string Nome { get; private set; } = string.Empty;
     public string Cnpj { get; private set; }
-    public string? Telefone { get; set; }
-    public double Latitude { get; set; }
-    public double Longitude { get; set; }
+    public string? Telefone { get; private set; }
+    public double Latitude { get; private set; }
+    public double Longitude { get; private set; }
 
     public double MediaAvaliacao { get; set; }
-    public List<AvaliacaoEstabelecimentos>? Avaliacoes { get; set; }
+    public List<AvaliacaoEstabelecimentos>? Avaliacoes { get; private set; }
 
     private static bool ValidarCnpj(string cnpj)
     {

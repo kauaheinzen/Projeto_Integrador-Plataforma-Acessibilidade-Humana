@@ -5,10 +5,10 @@ namespace PI.Models;
 public class Denuncia
 {
     public int Id { get; set; }
-    public string Descricao { get; set; }
-    public Caminho? Caminho { get; set; }
-    public Estabelecimento? Estabelecimento { get; set; }
-    public DateTime DataOcorrencia { get; set; }
+    public string Descricao { get; private set; }
+    public Caminho? Caminho { get; private set; }
+    public Estabelecimento? Estabelecimento { get; private set; }
+    public DateTime DataOcorrencia { get; private set; }
 
     public static async Task<bool> CadastrarDenuncia(string descricao, string dataOcorrencia, Caminho? caminho = null, Estabelecimento? estabelecimento = null)
     {
